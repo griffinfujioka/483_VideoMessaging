@@ -4,16 +4,16 @@ using System.Linq;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Navigation;
-using Microsoft.Phone.Controls;
-using Microsoft.Phone.Shell;
-using _483_VideoMessaging.Resources;
-using Microsoft.Devices;
+using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Media;
-using System.IO.IsolatedStorage;        // For camera
+using System.Windows.Media.Animation;
+using System.Windows.Shapes;
+using Microsoft.Phone.Controls;
+using System.IO.IsolatedStorage;
+using System.Windows.Navigation;
 
-
-namespace _483_VideoMessaging
+namespace _483_VideoMessaging_WP7
 {
     public partial class MainPage : PhoneApplicationPage
     {
@@ -34,9 +34,9 @@ namespace _483_VideoMessaging
             // Set the data context of the listbox control to the sample data
             DataContext = App.ViewModel;
 
-            
+
             captureSource = new CaptureSource();
-            fileSink = new FileSink(); 
+            fileSink = new FileSink();
 
             // Sample code to localize the ApplicationBar
             //BuildLocalizedApplicationBar();
@@ -58,7 +58,7 @@ namespace _483_VideoMessaging
         private void captureBtn_Click_1(object sender, EventArgs e)
         {
             videoCaptureDevice = CaptureDeviceConfiguration.GetDefaultVideoCaptureDevice();
-            
+
             // Initialize the camera if it exists on the device.
             if (videoCaptureDevice != null)
             {
@@ -89,22 +89,5 @@ namespace _483_VideoMessaging
 
 
         }
-
-
-        // Sample code for building a localized ApplicationBar
-        //private void BuildLocalizedApplicationBar()
-        //{
-        //    // Set the page's ApplicationBar to a new instance of ApplicationBar.
-        //    ApplicationBar = new ApplicationBar();
-
-        //    // Create a new button and set the text value to the localized string from AppResources.
-        //    ApplicationBarIconButton appBarButton = new ApplicationBarIconButton(new Uri("/Assets/AppBar/appbar.add.rest.png", UriKind.Relative));
-        //    appBarButton.Text = AppResources.AppBarButtonText;
-        //    ApplicationBar.Buttons.Add(appBarButton);
-
-        //    // Create a new menu item with the localized string from AppResources.
-        //    ApplicationBarMenuItem appBarMenuItem = new ApplicationBarMenuItem(AppResources.AppBarMenuItemText);
-        //    ApplicationBar.MenuItems.Add(appBarMenuItem);
-        //}
     }
 }

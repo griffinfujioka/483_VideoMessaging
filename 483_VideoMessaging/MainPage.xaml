@@ -5,6 +5,7 @@
     xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
     xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     d:DataContext="{d:DesignData SampleData/MainViewModelSampleData.xaml}"
@@ -35,11 +36,19 @@
             attributes to be drawn from the .resx file that matches the
             CurrentUICulture of the app at run time.
          -->
-
+        <Rectangle
+  x:Name="viewfinderRectangle"
+  Width="640"
+  Height="480"
+  HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+  Canvas.Left="80"/>
         <!--Pivot Control-->
         <phone:Pivot Title="MY APPLICATION">
             <!--Pivot item one-->
+            
             <phone:PivotItem Header="first">
+                
                 <!--Double line list with text wrapping-->
                 <phone:LongListSelector Margin="0,0,-12,0" ItemsSource="{Binding Items}">
                     <phone:LongListSelector.ItemTemplate>
@@ -69,6 +78,7 @@
             </phone:PivotItem>
         </phone:Pivot>
 
+        
         <!--Uncomment to see an alignment grid to help ensure your controls are
             aligned on common boundaries.  The image has a top margin of -32px to
             account for the System Tray. Set this to 0 (or remove the margin altogether)
@@ -77,5 +87,19 @@
             Before shipping remove this XAML and the image itself.-->
         <!--<Image Source="/Assets/AlignmentGrid.png" VerticalAlignment="Top" Height="800" Width="480" Margin="0,-32,0,0" Grid.Row="0" IsHitTestVisible="False" />-->
     </Grid>
+
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True" Mode="Default" Opacity="1.0" >
+
+            <shell:ApplicationBarIconButton x:Name="captureBtn" IconUri="/Assets/App Bar Buttons/capture.png" Text="capture" Click="captureBtn_Click_1"/>
+
+            <shell:ApplicationBar.MenuItems>
+                <shell:ApplicationBarMenuItem Text="about" />
+                <shell:ApplicationBarMenuItem Text="settings" />
+                <shell:ApplicationBarMenuItem Text="help" />
+            </shell:ApplicationBar.MenuItems>
+
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
 
 </phone:PhoneApplicationPage>
