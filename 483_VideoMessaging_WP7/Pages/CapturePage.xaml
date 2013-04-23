@@ -9,7 +9,7 @@
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
-    SupportedOrientations="Portrait" Orientation="Portrait"
+    SupportedOrientations="Portrait" Orientation="PortraitUp"
     mc:Ignorable="d"
     shell:SystemTray.IsVisible="True">
 
@@ -20,16 +20,49 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!--TitlePanel contains the name of the application and page title-->
-        <StackPanel Grid.Row="0" Margin="12,17,0,28">
-            <TextBlock Text="MY APPLICATION" Style="{StaticResource PhoneTextNormalStyle}"/>
-            <TextBlock Text="page name" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
-        </StackPanel>
 
         <!--ContentPanel - place additional content here-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
+        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,5,12,5">
+            <Rectangle
+  x:Name="viewfinderRectangle"
+  Width="456"
+  Height="500"
+  HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+  Canvas.Left="80">
+                <Rectangle.Fill>
+                    <VideoBrush x:Name="previewBrush">
+                        <VideoBrush.RelativeTransform>
+                            <CompositeTransform x:Name="myPreview"
+                            CenterX=".5"
+                            CenterY=".5" />
+                        </VideoBrush.RelativeTransform>
+                    </VideoBrush>
+                </Rectangle.Fill>
+            </Rectangle>
+
+            <MediaElement 
+            x:Name="VideoPlayer" 
+            Width="456" 
+            Height="500"
+            AutoPlay="True" 
+            RenderTransformOrigin="1.5, 1.5" 
+            VerticalAlignment="Center" 
+            HorizontalAlignment="Center" 
+            Stretch="Fill"
+            Canvas.Left="80">
+            </MediaElement>
 
         </Grid>
     </Grid>
 
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar  IsVisible="True" IsMenuEnabled="True" Mode="Default" Opacity="1.0" >
+
+            <shell:ApplicationBarIconButton x:Name="okBtn" IconUri="/Assets/App Bar Buttons/check.png" Text="OK" Click="okBtn_Click_1"/>
+            <shell:ApplicationBarIconButton x:Name="playBtn" IconUri="/Assets/App Bar Buttons/play.png" Text="play" Click="playBtn_Click_1"/>
+            <shell:ApplicationBarIconButton x:Name="cancelBtn" IconUri="/Assets/App Bar Buttons/cancel.png" Text="cancel"/>
+            
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
 </phone:PhoneApplicationPage>

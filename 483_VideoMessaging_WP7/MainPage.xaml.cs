@@ -17,14 +17,6 @@ namespace _483_VideoMessaging_WP7
 {
     public partial class MainPage : PhoneApplicationPage
     {
-        private VideoBrush videoRecorderBrush;  // Viewfinder for capturing video
-        // Source and device for capturing video.
-        private CaptureSource captureSource;
-        private VideoCaptureDevice videoCaptureDevice;
-        // File details for storing the recording.   
-        private IsolatedStorageFileStream isoVideoFile;
-        private FileSink fileSink;
-        private string isoVideoFileName = "CameraMovie.mp4";
 
         // Constructor
         public MainPage()
@@ -33,10 +25,6 @@ namespace _483_VideoMessaging_WP7
 
             // Set the data context of the listbox control to the sample data
             DataContext = App.ViewModel;
-
-
-            captureSource = new CaptureSource();
-            fileSink = new FileSink();
 
             // Sample code to localize the ApplicationBar
             //BuildLocalizedApplicationBar();
@@ -57,37 +45,26 @@ namespace _483_VideoMessaging_WP7
 
         private void captureBtn_Click_1(object sender, EventArgs e)
         {
-            videoCaptureDevice = CaptureDeviceConfiguration.GetDefaultVideoCaptureDevice();
+            NavigationService.Navigate(new Uri("/Pages/CapturePage.xaml", UriKind.Relative)); 
 
-            // Initialize the camera if it exists on the device.
-            if (videoCaptureDevice != null)
+            
+
+
+        }
+
+        private void FirstListBox_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
+        {
+            switch (FirstListBox.SelectedIndex)
             {
-                // Create the VideoBrush for the viewfinder.
-                videoRecorderBrush = new VideoBrush();
-                videoRecorderBrush.SetSource(captureSource);
-                // Display the viewfinder image on the rectangle.
-                viewfinderRectangle.Fill = videoRecorderBrush;
-                // Start video capture and display it on the viewfinder.
-                captureSource.Start();
+                // Record a new video 
+                case 0:                         
+                    NavigationService.Navigate(new Uri("/Pages/CapturePage.xaml", UriKind.Relative)); 
+                    break; 
+                // Share a video 
+                case 1:
+                    break; 
+                default: break; 
             }
-            else
-            {
-                // Disable buttons when the camera is not supported by the device.
-            }
-
-            // Connect fileSink to captureSource.
-            if (captureSource.VideoCaptureDevice != null
-                && captureSource.State == CaptureState.Started)
-            {
-                captureSource.Stop();
-                // Connect the input and output of fileSink.
-                fileSink.CaptureSource = captureSource;
-                fileSink.IsolatedStorageFileName = isoVideoFileName;
-            }
-
-            captureSource.Start();
-
-
         }
     }
 }

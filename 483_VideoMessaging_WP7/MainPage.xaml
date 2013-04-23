@@ -17,27 +17,15 @@
 
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
-        <Rectangle
-  x:Name="viewfinderRectangle"
-  Width="640"
-  Height="480"
-  HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-  Canvas.Left="80"/>
         <!--Pivot Control-->
-        <controls:Pivot Title="MY APPLICATION">
+        <controls:Pivot Title="VIDEO MESSAGING">
             <!--Pivot item one-->
-            <controls:PivotItem Header="first">
+            <controls:PivotItem Header="main menu">
                 <!--Double line list with text wrapping-->
-                <ListBox x:Name="FirstListBox" Margin="0,0,-12,0" ItemsSource="{Binding Items}">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                          <StackPanel Margin="0,0,0,17" Width="432" Height="78">
-                              <TextBlock Text="{Binding LineOne}" TextWrapping="Wrap" Style="{StaticResource PhoneTextExtraLargeStyle}"/>
-                              <TextBlock Text="{Binding LineTwo}" TextWrapping="Wrap" Margin="12,-6,12,0" Style="{StaticResource PhoneTextSubtleStyle}"/>
-                          </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
+                <ListBox x:Name="FirstListBox" Margin="0,100,-12,0" VerticalAlignment="Top" SelectionChanged="FirstListBox_SelectionChanged_1">
+                    <ListBoxItem FontSize="30" HorizontalAlignment="Center" Margin="0,20,0,20">Record new video</ListBoxItem>
+                    <ListBoxItem FontSize="30" HorizontalAlignment="Center" Margin="0,20,0,20">Share a video</ListBoxItem>
+                    
                 </ListBox>
             </controls:PivotItem>
  

@@ -98,6 +98,8 @@
     <Content Include="ApplicationIcon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\App Bar Buttons\play.png" />
+    <Content Include="Assets\App Bar Buttons\check.png" />
     <Content Include="Assets\App Bar Buttons\cancel.png" />
     <Content Include="Assets\App Bar Buttons\capture.png" />
     <Content Include="Assets\App Bar Buttons\delete.png" />
