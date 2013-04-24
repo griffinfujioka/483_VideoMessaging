@@ -14,6 +14,7 @@ using Microsoft.Devices;
 using System.IO;
 using System.Windows.Media.Imaging;
 using Microsoft.Xna.Framework.Media;
+using _483_VideoMessaging_WP7.Model;
 
 
 namespace _483_VideoMessaging_WP7.Pages
@@ -29,8 +30,11 @@ namespace _483_VideoMessaging_WP7.Pages
 
         // File details for storing the recording.   
         private IsolatedStorageFileStream isoVideoFile;
+        private WriteableBitmap thumbnail; 
         private FileSink fileSink;
-        private string isoVideoFileName = "CameraMovie.mp4";
+        private string isoVideoFileName = "CameraMovie.mp4"; 
+        private string isoImageFileName; 
+
 
         public CapturePage()
         {
@@ -42,6 +46,12 @@ namespace _483_VideoMessaging_WP7.Pages
 
 
 
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            captureSource.Stop(); 
+            base.OnNavigatedFrom(e);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -112,6 +122,14 @@ namespace _483_VideoMessaging_WP7.Pages
 
 
                     StartVideoPreview();
+                    
+                    //isoVideoFileName = App.video_counter + "_video.mp4";
+                    //App.video_counter++;
+
+                    var video = new VideoEntry(isoVideoFileName, isoVideoFileName, isoVideoFile, isoImageFileName, thumbnail, DateTime.Now.Date.ToShortDateString());
+
+                    App.UsersVideos.Add(video); 
+
                 }
             }
             // If stop fails, display an error.
@@ -160,12 +178,14 @@ namespace _483_VideoMessaging_WP7.Pages
             // Start the video for the first time.
             else
             {
-                // Stop the capture source.
-                captureSource.Stop();
-
                 // Get a thumbnail image from the video
                 captureSource.CaptureImageAsync();
                 captureSource.CaptureImageCompleted += new EventHandler<CaptureImageCompletedEventArgs>(CaptureImageCompleted); 
+
+                // Stop the capture source.
+                captureSource.Stop();
+
+               
 
                 // Remove VideoBrush from the tree.
                 viewfinderRectangle.Fill = null;
@@ -173,12 +193,16 @@ namespace _483_VideoMessaging_WP7.Pages
 
 
                 // Create the file stream and attach it to the MediaElement.
+
                 isoVideoFile = new IsolatedStorageFileStream(isoVideoFileName,
                                         FileMode.Open, FileAccess.Read,
                                         IsolatedStorageFile.GetUserStoreForApplication());
+                
 
                 
+                
                 VideoPlayer.SetSource(isoVideoFile);
+                
 
                 // Add an event handler for the end of playback.
                 VideoPlayer.MediaEnded += new RoutedEventHandler(VideoPlayerMediaEnded);
@@ -207,9 +231,15 @@ namespace _483_VideoMessaging_WP7.Pages
                 WriteableBitmap bitmap = e.Result;
                 bitmap.SaveJpeg(stream, bitmap.PixelWidth, bitmap.PixelHeight, 0, 100);
                 stream.Seek(0, SeekOrigin.Begin);
-                
+
+                // Give the thumbnail image a unique name 
+                isoImageFileName = DateTime.Now.Date + "_image.jpg"; 
+
                 using (MediaLibrary mediaLibrary = new MediaLibrary())
-                    mediaLibrary.SavePicture("Picture.jpg", stream);
+                    mediaLibrary.SavePicture(isoImageFileName, stream);
+
+                thumbnailImage.Source = bitmap;
+                thumbnail = bitmap;     // Set the page-level thumbnail variable 
             }
         }
 

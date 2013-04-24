@@ -12,12 +12,16 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using System.Collections.ObjectModel;
+using _483_VideoMessaging_WP7.Model;
 
 namespace _483_VideoMessaging_WP7
 {
     public partial class App : Application
     {
         private static MainViewModel viewModel = null;
+        public static ObservableCollection<VideoEntry> UsersVideos { get; set; }
+        public static int video_counter; 
 
         /// <summary>
         /// A static ViewModel used by the views to bind against.
@@ -46,6 +50,9 @@ namespace _483_VideoMessaging_WP7
         /// </summary>
         public App()
         {
+            video_counter = 1; 
+            UsersVideos = new ObservableCollection<VideoEntry>(); 
+
             // Global handler for uncaught exceptions. 
             UnhandledException += Application_UnhandledException;
 

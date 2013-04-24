@@ -52,6 +52,8 @@
             Stretch="Fill"
             Canvas.Left="80">
             </MediaElement>
+            
+            <Image x:Name="thumbnailImage" Width="100" Height="100"/>
 
         </Grid>
     </Grid>
