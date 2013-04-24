@@ -2,5 +2,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 >
     <Deployment.Parts>
+      <Capability Name="ID_CAP_ISV_CAMERA"/>
+      <Capability Name="ID_CAP_MICROPHONE"/>
+      <Capability Name="ID_CAP_MEDIALIB"/>
     </Deployment.Parts>
 </Deployment>

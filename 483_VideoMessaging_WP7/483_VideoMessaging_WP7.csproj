@@ -51,6 +51,7 @@
     <Reference Include="Microsoft.Phone" />
     <Reference Include="Microsoft.Phone.Controls" />
     <Reference Include="Microsoft.Phone.Interop" />
+    <Reference Include="Microsoft.Xna.Framework" />
     <Reference Include="System.Windows" />
     <Reference Include="system" />
     <Reference Include="System.Core" />
@@ -91,7 +92,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Properties\AppManifest.xml" />
+    <None Include="Properties\AppManifest.xml">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\WMAppManifest.xml" />
   </ItemGroup>
   <ItemGroup>

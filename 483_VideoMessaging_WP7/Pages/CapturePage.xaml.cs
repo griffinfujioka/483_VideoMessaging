@@ -5,12 +5,16 @@ using System.Net;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
+using Microsoft.Phone;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using System.Windows.Media;
 using System.IO.IsolatedStorage;
 using Microsoft.Devices;
 using System.IO;
+using System.Windows.Media.Imaging;
+using Microsoft.Xna.Framework.Media;
+
 
 namespace _483_VideoMessaging_WP7.Pages
 {
@@ -43,6 +47,7 @@ namespace _483_VideoMessaging_WP7.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             videoCaptureDevice = CaptureDeviceConfiguration.GetDefaultVideoCaptureDevice();
+            
            
           
             // Add eventhandlers for captureSource
@@ -158,14 +163,21 @@ namespace _483_VideoMessaging_WP7.Pages
                 // Stop the capture source.
                 captureSource.Stop();
 
+                // Get a thumbnail image from the video
+                captureSource.CaptureImageAsync();
+                captureSource.CaptureImageCompleted += new EventHandler<CaptureImageCompletedEventArgs>(CaptureImageCompleted); 
+
                 // Remove VideoBrush from the tree.
                 viewfinderRectangle.Fill = null;
+
+
 
                 // Create the file stream and attach it to the MediaElement.
                 isoVideoFile = new IsolatedStorageFileStream(isoVideoFileName,
                                         FileMode.Open, FileAccess.Read,
                                         IsolatedStorageFile.GetUserStoreForApplication());
 
+                
                 VideoPlayer.SetSource(isoVideoFile);
 
                 // Add an event handler for the end of playback.
@@ -183,6 +195,22 @@ namespace _483_VideoMessaging_WP7.Pages
             DisposeVideoPlayer();
 
             StartVideoPreview();
+        }
+
+
+        public void CaptureImageCompleted(object sender, CaptureImageCompletedEventArgs e)
+        {
+            var thumbnail = e.Result;
+            using (MemoryStream stream = new MemoryStream())
+            {
+                //WriteableBitmap bitmap = new WriteableBitmap(LayoutRoot, null);
+                WriteableBitmap bitmap = e.Result;
+                bitmap.SaveJpeg(stream, bitmap.PixelWidth, bitmap.PixelHeight, 0, 100);
+                stream.Seek(0, SeekOrigin.Begin);
+                
+                using (MediaLibrary mediaLibrary = new MediaLibrary())
+                    mediaLibrary.SavePicture("Picture.jpg", stream);
+            }
         }
 
         private void DisposeVideoPlayer()
