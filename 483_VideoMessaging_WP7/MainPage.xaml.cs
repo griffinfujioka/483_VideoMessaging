@@ -26,6 +26,8 @@ namespace _483_VideoMessaging_WP7
             // Set the data context of the listbox control to the sample data
             DataContext = App.ViewModel;
 
+            
+
             // Sample code to localize the ApplicationBar
             //BuildLocalizedApplicationBar();
         }
@@ -37,6 +39,8 @@ namespace _483_VideoMessaging_WP7
             {
                 App.ViewModel.LoadData();
             }
+
+            SecondListBox.ItemsSource = App.UsersVideos;
 
             //var bounds = Application.Current.RootVisual.RenderSize;
             //viewfinderRectangle.Width = bounds.Width;

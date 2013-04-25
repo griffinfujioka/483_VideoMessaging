@@ -122,14 +122,9 @@ namespace _483_VideoMessaging_WP7.Pages
 
 
                     StartVideoPreview();
-                    
-                    //isoVideoFileName = App.video_counter + "_video.mp4";
-                    //App.video_counter++;
+                  
 
-                    var video = new VideoEntry(isoVideoFileName, isoVideoFileName, isoVideoFile, isoImageFileName, thumbnail, DateTime.Now.Date.ToShortDateString());
-
-                    App.UsersVideos.Add(video); 
-
+                 
                 }
             }
             // If stop fails, display an error.
@@ -197,9 +192,8 @@ namespace _483_VideoMessaging_WP7.Pages
                 isoVideoFile = new IsolatedStorageFileStream(isoVideoFileName,
                                         FileMode.Open, FileAccess.Read,
                                         IsolatedStorageFile.GetUserStoreForApplication());
-                
 
-                
+
                 
                 VideoPlayer.SetSource(isoVideoFile);
                 
@@ -240,6 +234,10 @@ namespace _483_VideoMessaging_WP7.Pages
 
                 thumbnailImage.Source = bitmap;
                 thumbnail = bitmap;     // Set the page-level thumbnail variable 
+
+                var video = new VideoEntry(isoVideoFileName, isoVideoFileName, isoVideoFile, isoImageFileName, thumbnail, DateTime.Now.Date.ToShortDateString());
+
+                App.UsersVideos.Add(video); 
             }
         }
 
