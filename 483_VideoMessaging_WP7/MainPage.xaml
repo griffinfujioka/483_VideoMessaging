@@ -31,7 +31,7 @@
             </controls:PivotItem>
  
             <!--Pivot item two-->
-            <controls:PivotItem Header="second"> 
+            <controls:PivotItem Header="videos"> 
                 <!--Triple line list no text wrapping-->
                 <ListBox x:Name="SecondListBox" Margin="0,0,-12,0" ItemTemplate="{StaticResource VideosItemTemplate}">
                         <!--<ListBox.ItemTemplate>

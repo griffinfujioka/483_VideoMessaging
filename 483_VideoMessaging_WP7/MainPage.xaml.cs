@@ -40,8 +40,8 @@ namespace _483_VideoMessaging_WP7
                 App.ViewModel.LoadData();
             }
 
-            SecondListBox.ItemsSource = App.UsersVideos;
 
+            SecondListBox.ItemsSource = App.UsersVideos;
             //var bounds = Application.Current.RootVisual.RenderSize;
             //viewfinderRectangle.Width = bounds.Width;
             //viewfinderRectangle.Height = bounds.Height;

@@ -16,16 +16,18 @@ namespace _483_VideoMessaging_WP7.Model
         public string ThumbnailFileName { get; set; }       // name of the image file 
         public WriteableBitmap ThumbnailImage { get; set; }
         public string DateTaken { get; set; }
+        public string Description { get; set; }
 
         public VideoEntry(string title, string videofilename, IsolatedStorageFileStream videofile,
-            string thumbnailfilename, WriteableBitmap thumbnailimage, string datetaken)
+            string thumbnailfilename, WriteableBitmap thumbnailimage, string datetaken, string description)
         {
             this.Title = title;
             this.VideoFileName = videofilename;
             this.VideoFile = videofile;
             this.ThumbnailFileName = thumbnailfilename;
             this.ThumbnailImage = thumbnailimage;
-            this.DateTaken = datetaken; 
+            this.DateTaken = datetaken;
+            this.Description = description; 
         }
     }
 }

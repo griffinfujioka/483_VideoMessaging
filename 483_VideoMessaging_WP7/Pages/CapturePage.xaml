@@ -9,7 +9,7 @@
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
-    SupportedOrientations="Portrait" Orientation="PortraitUp"
+    SupportedOrientations="Portrait"  Orientation="Portrait"
     mc:Ignorable="d"
     shell:SystemTray.IsVisible="True">
 
@@ -17,17 +17,36 @@
     <Grid x:Name="LayoutRoot" Background="Transparent">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height=".4*"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height=".1*"/>
         </Grid.RowDefinitions>
 
+        <Grid x:Name="metadataGrid" Grid.Row="1" Margin="10,10,10,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width=".3*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" MaxHeight="60"/>
+                <RowDefinition Height="Auto" MaxHeight="200"/>
+            </Grid.RowDefinitions>
+                <TextBlock Text="Title: " Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <TextBox x:Name="titleTxtBox" Grid.Row="0" Grid.Column="1" TextWrapping="NoWrap" Height="60" Width="350" HorizontalAlignment="Left" VerticalAlignment="Top" InputScope="Text" FontSize="12"/>
+           
+            
+                <TextBlock Text="Description:" Grid.Row="1" Grid.Column="0"/>
+            <TextBox x:Name="descriptionTxtBox" Height="120" Grid.Row="1" TextWrapping="Wrap" Grid.Column="1" Width="350" HorizontalAlignment="Left" VerticalAlignment="Top" InputScope="Text" FontSize="12"/>
+
+        </Grid>
 
         <!--ContentPanel - place additional content here-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,5,12,5">
+        <Grid x:Name="ContentPanel" Grid.Row="2" Margin="12,5,12,5">
             <Rectangle
   x:Name="viewfinderRectangle"
-  Width="456"
-  Height="500"
-  HorizontalAlignment="Left"
+  Width="360"
+  Height="360"
+  HorizontalAlignment="Center"
             VerticalAlignment="Top"
   Canvas.Left="80">
                 <Rectangle.Fill>
@@ -43,10 +62,11 @@
 
             <MediaElement 
             x:Name="VideoPlayer" 
-            Width="456" 
-            Height="500"
+            Width="360" 
+            Height="360"
             AutoPlay="True" 
-            RenderTransformOrigin="1.5, 1.5" 
+            RenderTransformOrigin=".5, .5" 
+                
             VerticalAlignment="Center" 
             HorizontalAlignment="Center" 
             Stretch="Fill"
@@ -55,7 +75,10 @@
             
             <Image x:Name="thumbnailImage" Width="100" Height="100"/>
 
+            
         </Grid>
+
+        <TextBlock x:Name="statusTxtBlock" Grid.Row="4" Margin="10,5,10,5" />
     </Grid>
 
     <phone:PhoneApplicationPage.ApplicationBar>
@@ -63,6 +86,7 @@
 
             <shell:ApplicationBarIconButton x:Name="okBtn" IconUri="/Assets/App Bar Buttons/check.png" Text="OK" Click="okBtn_Click_1"/>
             <shell:ApplicationBarIconButton x:Name="playBtn" IconUri="/Assets/App Bar Buttons/play.png" Text="play" Click="playBtn_Click_1"/>
+            <shell:ApplicationBarIconButton x:Name="saveBtn" IconUri="/Assets/App Bar Buttons/save.png" Text="save" Click="saveBtn_Click_1"/>
             <shell:ApplicationBarIconButton x:Name="cancelBtn" IconUri="/Assets/App Bar Buttons/cancel.png" Text="cancel"/>
             
         </shell:ApplicationBar>
