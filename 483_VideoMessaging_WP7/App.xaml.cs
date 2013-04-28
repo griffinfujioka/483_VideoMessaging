@@ -83,25 +83,10 @@ namespace _483_VideoMessaging_WP7
 
                     IsolatedStorageFileStream videoFile = null; // new IsolatedStorageFileStream(video.VideoFileName, System.IO.FileMode.Open, videoFileISF);
 
-
-                    //BitmapImage bitmap = new BitmapImage(new Uri(video.ThumbnailFileName, UriKind.Relative));
-                    //bitmap.CreateOptions = BitmapCreateOptions.None;
-                    //bitmap.ImageOpened += (s, e) =>
-                    //{
-                    //    WriteableBitmap wbm = new WriteableBitmap((BitmapImage)s);
-                    //    thumbnail = new WriteableBitmap((BitmapImage)s);
-                    //};
-
-                    //Uri uri = new Uri("Image.jpg", UriKind.Relative);
-                    //StreamResourceInfo resourceInfo = Application.GetResourceStream(uri);
-                    //BitmapImage img = new BitmapImage();
-                    //img.SetSource(resourceInfo.Stream);
-                    //WriteableBitmap wbm = new WriteableBitmap(img);
-
                     BitmapImage bi = new BitmapImage();
                     using (IsolatedStorageFile myIsolatedStorage = IsolatedStorageFile.GetUserStoreForApplication())
                     {
-                        using (IsolatedStorageFileStream fileStream = myIsolatedStorage.OpenFile("Image.jpg", FileMode.Open, FileAccess.Read))
+                        using (IsolatedStorageFileStream fileStream = myIsolatedStorage.OpenFile(video.ThumbnailFileName, FileMode.Open, FileAccess.Read, FileShare.Read))
                         {
                             bi.SetSource(fileStream);
                         }
@@ -114,6 +99,8 @@ namespace _483_VideoMessaging_WP7
                     App.UsersVideos.Add(newVideoEntry);
                 }
 
+                storage.DeleteFile("SavedVideos.xml");
+                fileList = storage.GetFileNames(); 
 
             }
             catch(Exception ex)

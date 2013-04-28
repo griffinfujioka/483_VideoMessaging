@@ -282,10 +282,11 @@ namespace _483_VideoMessaging_WP7.Pages
             var thumbnail = e.Result;
             var myIsolatedStorage = IsolatedStorageFile.GetUserStoreForApplication(); 
             // Give the thumbnail image a unique name 
-            isoImageFileName = DateTime.Now.Date + "_image.jpg";
-            IsolatedStorageFileStream fileStream = myIsolatedStorage.CreateFile("Image.jpg");
+            //isoImageFileName = DateTime.Now.Date + "_image.jpg";
+            var filename = titleTxtBox.Text + "_image.jpg";
+            IsolatedStorageFileStream fileStream = myIsolatedStorage.CreateFile(filename);
             // Encode WriteableBitmap object to a JPEG stream.
-            Extensions.SaveJpeg(thumbnail, fileStream, thumbnail.PixelWidth, thumbnail.PixelHeight, 0, 85);
+            Extensions.SaveJpeg(thumbnail, fileStream, thumbnail.PixelWidth, thumbnail.PixelHeight, 90, 85);
             BitmapImage bmp = new BitmapImage();
             using (MemoryStream ms = new MemoryStream())
             {
@@ -302,36 +303,10 @@ namespace _483_VideoMessaging_WP7.Pages
             var description = descriptionTxtBox.Text;
 
 
-            var video = new VideoEntry(title, isoVideoFileName, isoVideoFile, isoImageFileName, thumbnail, bmp, DateTime.Now.Date.ToShortDateString(), description);
+            var video = new VideoEntry(title, isoVideoFileName, isoVideoFile, filename, thumbnail, bmp, DateTime.Now.Date.ToShortDateString(), description);
 
             App.UsersVideos.Add(video);
 
-            //using (MemoryStream stream = new MemoryStream())
-            //{
-            //    //WriteableBitmap bitmap = new WriteableBitmap(LayoutRoot, null);
-            //    WriteableBitmap bitmap = e.Result;
-            //    bitmap.SaveJpeg(stream, bitmap.PixelWidth, bitmap.PixelHeight, 90, 100);
-            //    stream.Seek(0, SeekOrigin.Begin);
-
-            //    // Give the thumbnail image a unique name 
-            //    isoImageFileName = DateTime.Now.Date + "_image.jpg";
-
-            //    using (MediaLibrary mediaLibrary = new MediaLibrary())
-            //        mediaLibrary.SavePicture(isoImageFileName, stream);
-
-            //    thumbnailImage.Source = bitmap;
-            //    thumbnail = bitmap;     // Set the page-level thumbnail variable 
-
-            //    Image img = new Image();
-
-            //    var title = titleTxtBox.Text;
-            //    var description = descriptionTxtBox.Text;
-
-
-            //    var video = new VideoEntry(title, isoVideoFileName, isoVideoFile, isoImageFileName, thumbnail, DateTime.Now.Date.ToShortDateString(), description);
-
-            //    App.UsersVideos.Add(video);
-            //}
         }
 
         private Stream RotateStream(Stream stream, int angle)
