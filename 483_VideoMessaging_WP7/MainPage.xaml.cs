@@ -67,6 +67,9 @@ namespace _483_VideoMessaging_WP7
                 // Share a video 
                 case 1:
                     break; 
+                case 2:
+                    NavigationService.Navigate(new Uri("/Pages/SignUpPage.xaml", UriKind.Relative)); 
+                    break; 
                 default: break; 
             }
         }

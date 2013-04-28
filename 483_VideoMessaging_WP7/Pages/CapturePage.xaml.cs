@@ -65,6 +65,7 @@ namespace _483_VideoMessaging_WP7.Pages
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+         
             videoCaptureDevice = CaptureDeviceConfiguration.GetDefaultVideoCaptureDevice();
 
             statusTxtBlock.Text = "Recording...";
@@ -233,7 +234,7 @@ namespace _483_VideoMessaging_WP7.Pages
         {
             // Figure out the orientation from the EXIF data 
             //e.Result.Position = 0;
-            //JpegInfo info = ExifReader.ReadJpeg(isoVideoFile, isoImageFileName); 
+            //JpegInfo info = ExifReader.ReadJpeg(isoVideoFile, isoImageFileName);
 
             //_width = info.Width;
             //_height = info.Height;
@@ -296,7 +297,8 @@ namespace _483_VideoMessaging_WP7.Pages
 
             }
 
-            //wb.SaveJpeg(fileStream, wb.PixelWidth, wb.PixelHeight, 0, 85);
+            
+
             fileStream.Close();
 
             var title = titleTxtBox.Text;
