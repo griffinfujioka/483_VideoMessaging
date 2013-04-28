@@ -70,5 +70,7 @@ namespace _483_VideoMessaging_WP7
                 default: break; 
             }
         }
+
+        
     }
 }
