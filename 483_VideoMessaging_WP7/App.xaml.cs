@@ -14,6 +14,12 @@ using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using System.Collections.ObjectModel;
 using _483_VideoMessaging_WP7.Model;
+using System.IO.IsolatedStorage;
+using System.IO;
+using System.Xml;
+using System.Xml.Serialization;
+using System.Windows.Media.Imaging;
+using System.Windows.Resources;
 
 namespace _483_VideoMessaging_WP7
 {
@@ -21,6 +27,9 @@ namespace _483_VideoMessaging_WP7
     {
         private static MainViewModel viewModel = null;
         public static ObservableCollection<VideoEntry> UsersVideos { get; set; }
+        public static ObservableCollection<SerializedVideoEntry> SerializedUserVideos { get; set; }
+        public static WriteableBitmap thumbnail; 
+       
         public static int video_counter; 
 
         /// <summary>
@@ -40,6 +49,82 @@ namespace _483_VideoMessaging_WP7
         }
 
         /// <summary>
+        /// 
+        /// 
+        /// </summary>
+        public void OpenAndReadFile()
+        {
+            IsolatedStorageFile storage = IsolatedStorageFile.GetUserStoreForApplication();
+            if (!storage.FileExists("SavedVideos.xml"))
+                return; 
+
+            var fileList = storage.GetFileNames(); 
+
+            try
+            {
+
+                using (IsolatedStorageFile myIsolatedStorage = IsolatedStorageFile.GetUserStoreForApplication())
+                {
+                    if (!myIsolatedStorage.FileExists("SavedVideos.xml"))
+                        return; 
+
+                    using (IsolatedStorageFileStream stream = myIsolatedStorage.OpenFile("SavedVideos.xml", FileMode.Open))
+                    {
+                        XmlSerializer serializer = new XmlSerializer(typeof(List<SerializedVideoEntry>));
+                        List<SerializedVideoEntry> data = (List<SerializedVideoEntry>)serializer.Deserialize(stream);
+                        App.SerializedUserVideos = new ObservableCollection<SerializedVideoEntry>(data); 
+                        
+
+                    }
+                }
+
+                foreach (SerializedVideoEntry video in App.SerializedUserVideos)
+                {
+
+                    IsolatedStorageFileStream videoFile = null; // new IsolatedStorageFileStream(video.VideoFileName, System.IO.FileMode.Open, videoFileISF);
+
+
+                    //BitmapImage bitmap = new BitmapImage(new Uri(video.ThumbnailFileName, UriKind.Relative));
+                    //bitmap.CreateOptions = BitmapCreateOptions.None;
+                    //bitmap.ImageOpened += (s, e) =>
+                    //{
+                    //    WriteableBitmap wbm = new WriteableBitmap((BitmapImage)s);
+                    //    thumbnail = new WriteableBitmap((BitmapImage)s);
+                    //};
+
+                    //Uri uri = new Uri("Image.jpg", UriKind.Relative);
+                    //StreamResourceInfo resourceInfo = Application.GetResourceStream(uri);
+                    //BitmapImage img = new BitmapImage();
+                    //img.SetSource(resourceInfo.Stream);
+                    //WriteableBitmap wbm = new WriteableBitmap(img);
+
+                    BitmapImage bi = new BitmapImage();
+                    using (IsolatedStorageFile myIsolatedStorage = IsolatedStorageFile.GetUserStoreForApplication())
+                    {
+                        using (IsolatedStorageFileStream fileStream = myIsolatedStorage.OpenFile("Image.jpg", FileMode.Open, FileAccess.Read))
+                        {
+                            bi.SetSource(fileStream);
+                        }
+                    }
+
+
+
+                    var newVideoEntry = new VideoEntry(video.Title, video.VideoFileName, videoFile, video.ThumbnailFileName, null, bi, video.DateTaken, video.Description);
+
+                    App.UsersVideos.Add(newVideoEntry);
+                }
+
+
+            }
+            catch(Exception ex)
+            {
+                //add some code here
+            }
+
+
+        }
+
+        /// <summary>
         /// Provides easy access to the root frame of the Phone Application.
         /// </summary>
         /// <returns>The root frame of the Phone Application.</returns>
@@ -51,7 +136,9 @@ namespace _483_VideoMessaging_WP7
         public App()
         {
             video_counter = 1; 
-            UsersVideos = new ObservableCollection<VideoEntry>(); 
+            UsersVideos = new ObservableCollection<VideoEntry>();
+            SerializedUserVideos = new ObservableCollection<SerializedVideoEntry>(); 
+            OpenAndReadFile();
 
             // Global handler for uncaught exceptions. 
             UnhandledException += Application_UnhandledException;
@@ -111,6 +198,29 @@ namespace _483_VideoMessaging_WP7
         private void Application_Closing(object sender, ClosingEventArgs e)
         {
             // Ensure that required application state is persisted here.
+
+            // Write to the Isolated Storage
+            XmlWriterSettings xmlWriterSettings = new XmlWriterSettings();
+            xmlWriterSettings.Indent = true;
+
+            foreach (VideoEntry video in App.UsersVideos)
+            {
+                var newSerializedVideoEntry = new SerializedVideoEntry(video);
+                SerializedUserVideos.Add(newSerializedVideoEntry); 
+            }
+
+            using (IsolatedStorageFile myIsolatedStorage = IsolatedStorageFile.GetUserStoreForApplication())
+            {
+                using (IsolatedStorageFileStream stream = myIsolatedStorage.OpenFile("SavedVideos.xml", FileMode.Create))
+                {
+                    XmlSerializer serializer = new XmlSerializer(typeof(ObservableCollection<SerializedVideoEntry>));
+                    using (XmlWriter xmlWriter = XmlWriter.Create(stream, xmlWriterSettings))
+                    {
+
+                        serializer.Serialize(xmlWriter, SerializedUserVideos); 
+                    }
+                }
+            }
         }
 
         // Code to execute if a navigation fails

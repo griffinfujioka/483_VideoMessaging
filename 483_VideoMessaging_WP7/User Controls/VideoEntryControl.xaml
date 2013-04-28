@@ -16,7 +16,7 @@
 
         <StackPanel Orientation="Vertical">
             <Image x:Name="videoThumbnail" Height="180" Width="180" Margin="10,20,10,20" 
-                   Source="{Binding ThumbnailImage}" HorizontalAlignment="Center"/>
+                   Source="{Binding ThumbnailBitmap}" HorizontalAlignment="Center"/>
             <TextBlock x:Name="titleTxtBlock" Height="40" Width="270" Text="{Binding Title}"/>
             <TextBlock x:Name="descriptionTxtBlock" MinHeight="40" Width="270" Text="{Binding Description}"/>
         </StackPanel>

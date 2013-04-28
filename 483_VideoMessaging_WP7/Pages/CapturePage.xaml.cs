@@ -15,6 +15,7 @@ using System.IO;
 using System.Windows.Media.Imaging;
 using Microsoft.Xna.Framework.Media;
 using _483_VideoMessaging_WP7.Model;
+using ExifLib;
 
 
 namespace _483_VideoMessaging_WP7.Pages
@@ -34,6 +35,12 @@ namespace _483_VideoMessaging_WP7.Pages
         private FileSink fileSink;
         private string isoVideoFileName = "CameraMovie.mp4";
         private string isoImageFileName;
+
+        ExifLib.ExifOrientation _orientation;
+        int _width;
+        int _height;
+        int _angle;
+        Stream capturedImage;
 
 
         public CapturePage()
@@ -224,33 +231,150 @@ namespace _483_VideoMessaging_WP7.Pages
 
         public void CaptureImageCompleted(object sender, CaptureImageCompletedEventArgs e)
         {
+            // Figure out the orientation from the EXIF data 
+            //e.Result.Position = 0;
+            //JpegInfo info = ExifReader.ReadJpeg(isoVideoFile, isoImageFileName); 
+
+            //_width = info.Width;
+            //_height = info.Height;
+            //_orientation = info.Orientation;
+
+            //switch (info.Orientation)
+            //{
+            //    case ExifOrientation.TopLeft:
+            //    case ExifOrientation.Undefined:
+            //        _angle = 0;
+            //        break;
+            //    case ExifOrientation.TopRight:
+            //        _angle = 90;
+            //        break;
+            //    case ExifOrientation.BottomRight:
+            //        _angle = 180;
+            //        break;
+            //    case ExifOrientation.BottomLeft:
+            //        _angle = 270;
+            //        break;
+            //}
+            //if (_angle > 0d)
+            //{
+            //    capturedImage = RotateStream(isoVideoFile, _angle);
+            //}
+            //else
+            //{
+            //    capturedImage = isoVideoFile;
+            //}
+
+            //// Give the thumbnail image a unique name 
+            //isoImageFileName = DateTime.Now.Date + "_image.jpg";
+
+            //using (IsolatedStorageFile myIsolatedStorage = IsolatedStorageFile.GetUserStoreForApplication())
+            //{
+            //    IsolatedStorageFileStream fileStream = myIsolatedStorage.CreateFile(isoImageFileName);
+            //    BitmapImage bitmap = new BitmapImage();
+            //    bitmap.SetSource(capturedImage);
+
+            //    WriteableBitmap wb = new WriteableBitmap(bitmap);
+            //    wb.SaveJpeg(fileStream, wb.PixelWidth, wb.PixelHeight, 0, 85);
+
+            //    fileStream.Close();
+            //}
+
             var thumbnail = e.Result;
-            using (MemoryStream stream = new MemoryStream())
+            var myIsolatedStorage = IsolatedStorageFile.GetUserStoreForApplication(); 
+            // Give the thumbnail image a unique name 
+            isoImageFileName = DateTime.Now.Date + "_image.jpg";
+            IsolatedStorageFileStream fileStream = myIsolatedStorage.CreateFile("Image.jpg");
+            // Encode WriteableBitmap object to a JPEG stream.
+            Extensions.SaveJpeg(thumbnail, fileStream, thumbnail.PixelWidth, thumbnail.PixelHeight, 0, 85);
+            BitmapImage bmp = new BitmapImage();
+            using (MemoryStream ms = new MemoryStream())
             {
-                //WriteableBitmap bitmap = new WriteableBitmap(LayoutRoot, null);
-                WriteableBitmap bitmap = e.Result;
-                bitmap.SaveJpeg(stream, bitmap.PixelWidth, bitmap.PixelHeight, 90, 100);
-                stream.Seek(0, SeekOrigin.Begin);
+                thumbnail.SaveJpeg(ms, thumbnail.PixelWidth, thumbnail.PixelHeight, 0, 100);
+                
+                bmp.SetSource(ms);
 
-                // Give the thumbnail image a unique name 
-                isoImageFileName = DateTime.Now.Date + "_image.jpg";
-
-                using (MediaLibrary mediaLibrary = new MediaLibrary())
-                    mediaLibrary.SavePicture(isoImageFileName, stream);
-
-                thumbnailImage.Source = bitmap;
-                thumbnail = bitmap;     // Set the page-level thumbnail variable 
-
-                Image img = new Image();
-
-                var title = titleTxtBox.Text;
-                var description = descriptionTxtBox.Text;
-
-
-                var video = new VideoEntry(title, isoVideoFileName, isoVideoFile, isoImageFileName, thumbnail, DateTime.Now.Date.ToShortDateString(), description);
-
-                App.UsersVideos.Add(video);
             }
+
+            //wb.SaveJpeg(fileStream, wb.PixelWidth, wb.PixelHeight, 0, 85);
+            fileStream.Close();
+
+            var title = titleTxtBox.Text;
+            var description = descriptionTxtBox.Text;
+
+
+            var video = new VideoEntry(title, isoVideoFileName, isoVideoFile, isoImageFileName, thumbnail, bmp, DateTime.Now.Date.ToShortDateString(), description);
+
+            App.UsersVideos.Add(video);
+
+            //using (MemoryStream stream = new MemoryStream())
+            //{
+            //    //WriteableBitmap bitmap = new WriteableBitmap(LayoutRoot, null);
+            //    WriteableBitmap bitmap = e.Result;
+            //    bitmap.SaveJpeg(stream, bitmap.PixelWidth, bitmap.PixelHeight, 90, 100);
+            //    stream.Seek(0, SeekOrigin.Begin);
+
+            //    // Give the thumbnail image a unique name 
+            //    isoImageFileName = DateTime.Now.Date + "_image.jpg";
+
+            //    using (MediaLibrary mediaLibrary = new MediaLibrary())
+            //        mediaLibrary.SavePicture(isoImageFileName, stream);
+
+            //    thumbnailImage.Source = bitmap;
+            //    thumbnail = bitmap;     // Set the page-level thumbnail variable 
+
+            //    Image img = new Image();
+
+            //    var title = titleTxtBox.Text;
+            //    var description = descriptionTxtBox.Text;
+
+
+            //    var video = new VideoEntry(title, isoVideoFileName, isoVideoFile, isoImageFileName, thumbnail, DateTime.Now.Date.ToShortDateString(), description);
+
+            //    App.UsersVideos.Add(video);
+            //}
+        }
+
+        private Stream RotateStream(Stream stream, int angle)
+        {
+            stream.Position = 0;
+            if (angle % 90 != 0 || angle < 0) throw new ArgumentException();
+            if (angle % 360 == 0) return stream;
+
+            BitmapImage bitmap = new BitmapImage();
+            bitmap.SetSource(stream);
+            WriteableBitmap wbSource = new WriteableBitmap(bitmap);
+
+            WriteableBitmap wbTarget = null;
+            if (angle % 180 == 0)
+            {
+                wbTarget = new WriteableBitmap(wbSource.PixelWidth, wbSource.PixelHeight);
+            }
+            else
+            {
+                wbTarget = new WriteableBitmap(wbSource.PixelHeight, wbSource.PixelWidth);
+            }
+
+            for (int x = 0; x < wbSource.PixelWidth; x++)
+            {
+                for (int y = 0; y < wbSource.PixelHeight; y++)
+                {
+                    switch (angle % 360)
+                    {
+                        case 90:
+                            wbTarget.Pixels[(wbSource.PixelHeight - y - 1) + x * wbTarget.PixelWidth] = wbSource.Pixels[x + y * wbSource.PixelWidth];
+                            break;
+                        case 180:
+                            wbTarget.Pixels[(wbSource.PixelWidth - x - 1) + (wbSource.PixelHeight - y - 1) * wbSource.PixelWidth] = wbSource.Pixels[x + y * wbSource.PixelWidth];
+                            break;
+                        case 270:
+                            wbTarget.Pixels[y + (wbSource.PixelWidth - x - 1) * wbTarget.PixelWidth] = wbSource.Pixels[x + y * wbSource.PixelWidth];
+                            break;
+                    }
+                }
+            }
+            MemoryStream targetStream = new MemoryStream();
+            wbTarget.SaveJpeg(targetStream, wbTarget.PixelWidth, wbTarget.PixelHeight, 0, 100);
+            return targetStream;
         }
 
         private void DisposeVideoPlayer()
